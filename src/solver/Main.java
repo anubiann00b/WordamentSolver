@@ -3,13 +3,15 @@ package solver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class Main {
     
     public static void main(String[] args) {        
         new Thread(new Runnable(){
             public void run() {
-                Solver.setWords("wordlist_big.txt");
+                Solver.setWords("wordlist.txt");
+                Solver.initialize();
             }
         }).start();
         
@@ -23,6 +25,16 @@ public class Main {
             System.out.println("IO Error: " + e);
         }
         Solver.setGrid(Parser.parseGrid(grid));
-        Solver.solve();
+        
+        String[] rawSolutions = Solver.solve();
+        
+        ArrayList<String> solutions = new ArrayList<String>();
+        
+        for (String s : rawSolutions)
+            if (!solutions.contains(s))
+                solutions.add(s);
+        
+        for (String s : solutions)
+            System.out.println(s);
     }
 }
