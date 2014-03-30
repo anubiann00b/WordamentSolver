@@ -36,6 +36,8 @@ public class Solver {
         }
         for (int i=-1;i<=1;i++) {
             for (int j=-1;j<=1;j++) {
+                if (i==0 && j==0)
+                    continue;
                 int x = cx + i;
                 int y = cy + j;
                 
@@ -77,5 +79,26 @@ class Location {
     public Location(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof Location))
+            return false;
+        Location l = (Location) o;
+        return x==l.x && y==l.y;
+    }
+    
+    @Override
+    public String toString() {
+        return x + " " + y;
+    }
+    
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 17*hash+this.x;
+        hash = 17*hash+this.y;
+        return hash;
     }
 }
