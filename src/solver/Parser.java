@@ -22,7 +22,7 @@ public class Parser {
             }
             reader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File not found.");
+            System.out.println("File not found: " + filename);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

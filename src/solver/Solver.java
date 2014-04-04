@@ -14,6 +14,14 @@ public class Solver {
     
     public static void setGrid(char[][] newGrid) {
         grid = newGrid;
+        System.out.println("Grid:");
+        
+        for (char[] arr : newGrid) {
+            for (char c : arr) {
+                System.out.print(c + " ");
+            }
+            System.out.println();
+        }
     }
     
     public static String[] solve() {
@@ -30,6 +38,9 @@ public class Solver {
     private static ArrayList<String> recursiveSolve(int cx, int cy, char[] chars,
             Node node, ArrayList<Location> locs) {
         ArrayList<String> strings = new ArrayList<String>();
+        if (node.isWord()) {
+            strings.add(new String(chars));
+        }
         if (!node.hasNodes()) {
             strings.add(new String(chars));
             return strings;

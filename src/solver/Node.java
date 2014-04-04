@@ -7,13 +7,16 @@ public class Node {
     private char myChar;
     private Node[] nodes;
     private int depth;
+    private boolean isWord;
     
     public char getChar() { return myChar; }
     public boolean hasNodes() { return nodes!=null; }
+    public boolean isWord() { return isWord; }
     
-    public Node(char c, int depth, int arrStart) {
+    public Node(char c, int depth, String s, int arrStart) {
         this.myChar = c;
         this.depth = depth;
+        this.isWord = WordTree.isWord(s);
         setupNodes(arrStart);
     }
     
@@ -50,7 +53,7 @@ public class Node {
                 continue;
             seen[seenCount] = currentChar;
             seenCount++;
-            nodeList.add(new Node(currentChar,depth+1,i));
+            nodeList.add(new Node(currentChar,depth+1,words[i].substring(0,depth),i));
         }
         if (!nodeList.isEmpty())
             nodes = nodeList.toArray(new Node[]{});

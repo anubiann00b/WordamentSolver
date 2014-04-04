@@ -23,8 +23,16 @@ public class WordTree {
                     break;
                 }
             }
-            letters[i] = new Node((char)(i+'a'),1,start);
+            letters[i] = new Node((char)(i+'a'),1,"",start);
         }
+        System.out.println("Initialized.");
+    }
+    
+    public static boolean isWord(String str) {
+        for (String s : words)
+            if (s.equals(str))
+                return true;
+        return false;
     }
     
     public static boolean isWordMatch(char[] chars) {

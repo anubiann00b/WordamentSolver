@@ -9,6 +9,7 @@ public class Main {
     
     public static void main(String[] args) {        
         new Thread(new Runnable(){
+            @Override
             public void run() {
                 Solver.setWords("wordlist.txt");
                 Solver.initialize();
@@ -26,7 +27,12 @@ public class Main {
         }
         Solver.setGrid(Parser.parseGrid(grid));
         
+        System.out.println("Started.");
+        long startTime = System.currentTimeMillis();
+        
         String[] rawSolutions = Solver.solve();
+        
+        System.out.println("Time: " + (System.currentTimeMillis()-startTime));
         
         ArrayList<String> solutions = new ArrayList<String>();
         
