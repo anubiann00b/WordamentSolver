@@ -24,30 +24,30 @@ public class Solver {
         Location.init(newGrid.length);
     }
     public static String[] solve() {
-        ArrayList<String> strings = new ArrayList<String>(300);
+        ArrayList<String> strings = new ArrayList<String>(2500);
         for (int i=0;i<grid.length;i++) {
             for (int j=0;j<grid[0].length;j++) {
-                recursiveSolve(i,j,"",strings,new ArrayList<Location>(20));
+                recursiveSolve(i,j,"",strings,new ArrayList<Location>());
             }
         }
+        System.out.println(strings.size());
         return strings.toArray(new String[]{});
     }
     
     private static void recursiveSolve(int cx, int cy, String str, ArrayList<String> strings,
             ArrayList<Location> locs) {
         
-        int word = isWord(str);
-        
-        if (word == 3 && str.length() >= 3)
-            strings.add(str);
-        
-        if (word == 0 || word == 2)
+        if (!isPrefix(str))
             return;
+        
+        if (isWord(str))
+            strings.add(str);
         
         for (int i=-1;i<=1;i++) {
             for (int j=-1;j<=1;j++) {
                 if (i==0 && j==0)
                     continue;
+                
                 int x = cx + i;
                 int y = cy + j;
                 
@@ -69,35 +69,38 @@ public class Solver {
         }
     }
     
-    /**
-     * Tests if a string is in the wordlist.
-     * 
-     * @param prefix The string to test.
-     * @return 3 if word and prefix, 2 if word, 1 if prefix, 0 if neither.
-     */
-    public static int isWord(String prefix) {
+    public static boolean isWord(String prefix) {
         int low = 0;
         int high = words.length;
-        int middle = (low+high)/2;
+        int middle;
         while (low < high-1) {
             middle = (low+high)/2;
-            //System.out.println(words[middle] + " " + low + " " + high);
             int pos = prefix.compareTo(words[middle]);
-            if (pos == 0) {
-                if (words[middle+1].contains(prefix))
-                    return 3;
-                else
-                    return 2;
-            }
+            if (pos == 0)
+                return true;
             if (pos < 0)
                 high = middle;
             if (pos > 0)
                 low = middle;
         }
-        //System.out.println(words[middle]);
-        if (words[middle+1].contains(prefix))
-            return 1;
-        return 0;
+        return false;
+    }
+    
+    public static boolean isPrefix(String prefix) {
+        int low = 0;
+        int high = words.length;
+        int middle = (low+high)/2;
+        while (low < high-1) {
+            if (words[middle].contains(prefix))
+                return true;
+            middle = (low+high)/2;
+            int pos = prefix.compareTo(words[middle]);
+            if (pos < 0)
+                high = middle;
+            if (pos > 0)
+                low = middle;
+        }
+        return false;
     }
 }
 
