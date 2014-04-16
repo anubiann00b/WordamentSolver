@@ -1,7 +1,6 @@
 package solver;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Solver {
     
@@ -22,29 +21,29 @@ public class Solver {
             }
             System.out.println();
         }
+        Location.init(newGrid.length);
     }
-    
     public static String[] solve() {
-        ArrayList<String> strings = new ArrayList<String>();
+        ArrayList<String> strings = new ArrayList<String>(300);
         for (int i=0;i<grid.length;i++) {
             for (int j=0;j<grid[0].length;j++) {
-                strings.addAll(recursiveSolve(i,j,new char[]{grid[i][j]},
-                        WordTree.getNode(grid[i][j]),new ArrayList<Location>()));
+                recursiveSolve(i,j,"",strings,new ArrayList<Location>(20));
             }
         }
         return strings.toArray(new String[]{});
     }
     
-    private static ArrayList<String> recursiveSolve(int cx, int cy, char[] chars,
-            Node node, ArrayList<Location> locs) {
-        ArrayList<String> strings = new ArrayList<String>();
-        if (node.isWord()) {
-            strings.add(new String(chars));
-        }
-        if (!node.hasNodes()) {
-            strings.add(new String(chars));
-            return strings;
-        }
+    private static void recursiveSolve(int cx, int cy, String str, ArrayList<String> strings,
+            ArrayList<Location> locs) {
+        
+        int word = isWord(str);
+        
+        if (word == 3 && str.length() >= 3)
+            strings.add(str);
+        
+        if (word == 0 || word == 2)
+            return;
+        
         for (int i=-1;i<=1;i++) {
             for (int j=-1;j<=1;j++) {
                 if (i==0 && j==0)
@@ -55,39 +54,76 @@ public class Solver {
                 if (x<0 || y<0 || x>grid.length-1 || y>grid[0].length-1)
                     continue;
                 
-                Location newLoc = new Location(x,y);
+                Location newLoc = Location.getLoc(x,y);
                 
                 if (locs.contains(newLoc))
                     continue;
                 
-                char[] newArr = Arrays.copyOf(chars,chars.length+1);
-                newArr[chars.length] = grid[x][y];
+                String newStr = str + grid[x][y];
                 
-                Node newNode = node.getNodeWithChar(grid[x][y]);
-                if (newNode == null) {
-                    continue;
-                }
-                ArrayList<Location> newLocs = new ArrayList<Location>(locs);
+                ArrayList<Location> newLocs = new ArrayList<Location>(locs.size()+1);
+                newLocs.addAll(locs);
                 newLocs.add(newLoc);
-                strings.addAll(recursiveSolve(x,y,newArr,newNode,newLocs));
+                recursiveSolve(x,y,newStr,strings,newLocs);
             }
         }
-        return strings;
     }
     
-    public static void initialize() {
-        WordTree.initialize(words);
+    /**
+     * Tests if a string is in the wordlist.
+     * 
+     * @param prefix The string to test.
+     * @return 3 if word and prefix, 2 if word, 1 if prefix, 0 if neither.
+     */
+    public static int isWord(String prefix) {
+        int low = 0;
+        int high = words.length;
+        int middle = (low+high)/2;
+        while (low < high-1) {
+            middle = (low+high)/2;
+            //System.out.println(words[middle] + " " + low + " " + high);
+            int pos = prefix.compareTo(words[middle]);
+            if (pos == 0) {
+                if (words[middle+1].contains(prefix))
+                    return 3;
+                else
+                    return 2;
+            }
+            if (pos < 0)
+                high = middle;
+            if (pos > 0)
+                low = middle;
+        }
+        //System.out.println(words[middle]);
+        if (words[middle+1].contains(prefix))
+            return 1;
+        return 0;
     }
 }
 
 class Location {
+    
+    private static Location[][] locs;
+    
+    static void init(int len) {
+        locs = new Location[len][len];
+        
+        for (int i=0;i<len;i++)
+            for (int j=0;j<len;j++)
+                locs[i][j] = new Location(i,j);
+    }
+    
+    static Location getLoc(int x, int y) {
+        return locs[x][y];
+    }
+    
     private int x;
     private int y;
 
-    public int getX() { return x; }
-    public int getY() { return y; }
+    int getX() { return x; }
+    int getY() { return y; }
 
-    public Location(int x, int y) {
+    private Location(int x, int y) {
         this.x = x;
         this.y = y;
     }

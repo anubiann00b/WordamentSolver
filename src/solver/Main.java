@@ -7,24 +7,22 @@ import java.util.ArrayList;
 
 public class Main {
     
-    public static void main(String[] args) {        
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                Solver.setWords("wordlist.txt");
-                Solver.initialize();
-            }
-        }).start();
+    public static void main(String[] args) {
+        
+        Solver.setWords("wordlist.txt");
         
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Enter a grid.\n");
+        
         String grid = null;
         try {
-            grid = reader.readLine();
+            //grid = reader.readLine();
+            grid = "pireieittlohaopt";
             reader.close();
         } catch (IOException e) {
             System.out.println("IO Error: " + e);
         }
+        
         Solver.setGrid(Parser.parseGrid(grid));
         
         System.out.println("Started.");
@@ -39,6 +37,8 @@ public class Main {
         for (String s : rawSolutions)
             if (!solutions.contains(s))
                 solutions.add(s);
+        
+        System.out.println("Words: " + solutions.size());
         
         for (String s : solutions)
             System.out.println(s);
