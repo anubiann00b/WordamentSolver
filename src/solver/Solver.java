@@ -21,21 +21,20 @@ public class Solver {
             }
             System.out.println();
         }
-        Location.init(newGrid.length);
     }
     public static String[] solve() {
-        ArrayList<String> strings = new ArrayList<String>(2500);
+        boolean[][] visited = new boolean[grid.length][grid.length];
+        ArrayList<String> strings = new ArrayList<String>();
         for (int i=0;i<grid.length;i++) {
             for (int j=0;j<grid[0].length;j++) {
-                recursiveSolve(i,j,"",strings,new ArrayList<Location>());
+                recursiveSolve(i,j,"",strings,visited);
             }
         }
-        System.out.println(strings.size());
         return strings.toArray(new String[]{});
     }
     
     private static void recursiveSolve(int cx, int cy, String str, ArrayList<String> strings,
-            ArrayList<Location> locs) {
+            boolean[][] visited) {
         
         if (!isPrefix(str))
             return;
@@ -54,17 +53,14 @@ public class Solver {
                 if (x<0 || y<0 || x>grid.length-1 || y>grid[0].length-1)
                     continue;
                 
-                Location newLoc = Location.getLoc(x,y);
-                
-                if (locs.contains(newLoc))
+                if (visited[x][y])
                     continue;
                 
                 String newStr = str + grid[x][y];
                 
-                ArrayList<Location> newLocs = new ArrayList<Location>(locs.size()+1);
-                newLocs.addAll(locs);
-                newLocs.add(newLoc);
-                recursiveSolve(x,y,newStr,strings,newLocs);
+                visited[x][y] = true;
+                recursiveSolve(x,y,newStr,strings,visited);
+                visited[x][y] = false;
             }
         }
     }
@@ -101,54 +97,5 @@ public class Solver {
                 low = middle;
         }
         return false;
-    }
-}
-
-class Location {
-    
-    private static Location[][] locs;
-    
-    static void init(int len) {
-        locs = new Location[len][len];
-        
-        for (int i=0;i<len;i++)
-            for (int j=0;j<len;j++)
-                locs[i][j] = new Location(i,j);
-    }
-    
-    static Location getLoc(int x, int y) {
-        return locs[x][y];
-    }
-    
-    private int x;
-    private int y;
-
-    int getX() { return x; }
-    int getY() { return y; }
-
-    private Location(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || !(o instanceof Location))
-            return false;
-        Location l = (Location) o;
-        return x==l.x && y==l.y;
-    }
-    
-    @Override
-    public String toString() {
-        return x + " " + y;
-    }
-    
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 17*hash+this.x;
-        hash = 17*hash+this.y;
-        return hash;
     }
 }

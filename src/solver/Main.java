@@ -16,8 +16,8 @@ public class Main {
         
         String grid = null;
         try {
-            //grid = reader.readLine();
-            grid = "pireieittlohaopt";
+            grid = reader.readLine();
+            //grid = "pireieittlohaopt";
             reader.close();
         } catch (IOException e) {
             System.out.println("IO Error: " + e);
