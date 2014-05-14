@@ -13,7 +13,7 @@ public class Solver {
     
     public static void setGrid(char[][] newGrid) {
         grid = newGrid;
-        System.out.println("Grid:");
+        System.out.println("\nGrid:");
         
         for (char[] arr : newGrid) {
             for (char c : arr) {

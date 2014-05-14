@@ -17,7 +17,6 @@ public class Main {
         String grid = null;
         try {
             grid = reader.readLine();
-            //grid = "pireieittlohaopt";
             reader.close();
         } catch (IOException e) {
             System.out.println("IO Error: " + e);
@@ -25,12 +24,11 @@ public class Main {
         
         Solver.setGrid(Parser.parseGrid(grid));
         
-        System.out.println("Started.");
         long startTime = System.currentTimeMillis();
         
         String[] rawSolutions = Solver.solve();
         
-        System.out.println("Time: " + (System.currentTimeMillis()-startTime));
+        System.out.println("\nTime: " + (System.currentTimeMillis()-startTime));
         
         ArrayList<String> solutions = new ArrayList<String>();
         
@@ -38,7 +36,7 @@ public class Main {
             if (!solutions.contains(s))
                 solutions.add(s);
         
-        System.out.println("Words: " + solutions.size());
+        System.out.println("Words: " + solutions.size() + "\n");
         
         for (String s : solutions)
             System.out.println(s);
